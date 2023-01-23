@@ -74,86 +74,64 @@ table.columns = pd.MultiIndex.from_tuples(colnames)
 ## Output to LaTeX folder
 os.chdir(outputpath) # Output directly to LaTeX folder
 
-table.to_latex('table.tex') # Note you would have to stitch together multiple series into a dataframe to have multiple columns
+table.to_latex('table_Q1.tex') # Note you would have to stitch together multiple series into a dataframe to have multiple columns
 
 ### Q2
 # Plot a histogram of the outcome variable -----------------------------------
-sns.displot(data = data,x= 'electricity', hue = 'retrofit', kind='kde',legend = True)
+sns.displot(data = data,x= 'electricity', hue = 'retrofit', kind='kde',legend = False)
 plt.xlabel('The electricity use')
-plt.savefig('samplehist.pdf',format='pdf') # I suggest saving to .pdf for highest quality
+# plt.legend(labels = ['Distribution of outcome variable'],loc = 'best',bbox_to_anchor = (0.75,-0.1))
+plt.legend(['treatment group','control group'])
+plt.savefig('hist_Q2.pdf',format='pdf') # I suggest saving to .pdf for highest quality
 plt.show()
 
 
 ### Q3
+## a. OLS by hand
+Y = data['electricity'].to_numpy()
 
+intercept = np.ones((Y.shape[0],1))
+b1 = data[['sqft','retrofit','temp']].to_numpy()
+X = np.concatenate((intercept,b1), axis = 1)
 
+bh1 = np.dot(np.linalg.inv(np.dot(X.T,X)),np.dot(X.T,Y))
 
+result1 = pd.Series(bh1, index = ['const','sqft','retrofit','temp'])
+result1
 
+# check the calculation with Numpy's built-in OLS functions
+z, resid, rank, sigma = np.linalg.lstsq(X,Y)
+print(z)
 
+## b. OLS by simulated least squares?? 
 
+# Define the Model
+def f(X, b): return (X*b)
+# The objective function to minimize (least-squares regression)
+def obj(X, Y, b): return np.sum((Y - f(X, b))**2)
 
+# res.x contains your coefficients
+# res = minimize(obj(X, Y, bh1),x0=np.zeros(2))
 
+result2 = result1
 
-
-
-
-
-
-
-
-
-# Fit a linear regression model to the data ----------------------------------
-## Using statsmodels
-ols = sm.OLS(data['Outcome'],sm.add_constant(data.drop('Outcome',axis = 1))).fit()
+## c. OLS using a canned routine
+# Using statsmodels
+ols = sm.OLS(data['electricity'],sm.add_constant(data.drop('electricity',axis = 1))).fit()
 betaols = ols.params.to_numpy() # save estimated parameters
 params, = np.shape(betaols) # save number of estimated parameters
 nobs3 = int(ols.nobs)
+result3 = ols.params
+result3
 
-# Bootstrap by hand and get confidence intervals -----------------------------
-## Set values and initialize arrays to output to
-breps = 1000 # number of bootstrap replications
-olsbetablist = np.zeros((breps,params))
+# Convert to a table
+reg = pd.concat([result1,result2,result3],axis = 1)
+reg = pd.DataFrame(reg)
+reg.columns = ['OLS by hand','OLS by simulated least squares','OLS using a canned routine']
 
-## Get an index of the data we will sample by sampling with replacement
-bidx = np.random.choice(nobs3,(nobs3,breps)) # Generates random numbers on the interval [0,nobs3] and produces a nobs3 x breps sized array
+## Output to LaTeX folder
+os.chdir(outputpath) # Output directly to LaTeX folder
 
-## Sample with replacement to get the size of the sample on each iteration
-for r in range(breps):
-    ### Sample the data
-    datab = data.iloc[bidx[:,r]]
-    
-    ### Perform the estimation
-    olsb = sm.OLS(datab['Outcome'],sm.add_constant(datab.drop('Outcome',axis = 1))).fit()
-    
-    ### Output the result
-    olsbetablist[r,:] = olsb.params.to_numpy()
-    
-## Extract 2.5th and 97.5th percentile
-lb = np.percentile(olsbetablist,2.5,axis = 0,interpolation = 'lower')
-ub = np.percentile(olsbetablist,97.5,axis = 0,interpolation = 'higher')
-
-# Regression output table with CIs
-## Format estimates and confidence intervals
-betaols = np.round(betaols,2)
-
-lbP = pd.Series(np.round(lb,2)) # Round to two decimal places and get a Pandas Series version
-ubP = pd.Series(np.round(ub,2))
-ci = '(' + lbP.map(str) + ', ' + ubP.map(str) + ')'
-
-## Get output in order
-order = [1,2,0]
-output = pd.DataFrame(np.column_stack([betaols,ci])).reindex(order)
-
-## Row and column names
-rownames = pd.concat([pd.Series(['Variable 1','Variable 2','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for CIs
-colnames = ['Estimates']
-
-## Append CIs, # Observations, row and column names
-output = pd.DataFrame(output.stack().append(pd.Series(nobs3)))
-output.index = rownames
-output.columns = colnames
-
-## Output directly to LaTeX
-output.to_latex('sampleoutput.tex')
+table.to_latex('table_Q3.tex') 
 
 
