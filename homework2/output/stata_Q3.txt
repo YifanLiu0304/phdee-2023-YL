@@ -1,0 +1,16 @@
+		(1)
+VARIABLES	LABELS	Ordinary least squares
+		
+sqft	sqft	0.62**
+		(0.01)
+retrofit	retrofit	-109.67**
+		(7.94)
+temp	temp	3.26
+		(1.93)
+Constant	Constant	-83.60
+		(154.69)
+		
+Observations		1,000
+R-squared		0.92
+Robust standard errors in parentheses		
+** p<0.01, * p<0.05		
