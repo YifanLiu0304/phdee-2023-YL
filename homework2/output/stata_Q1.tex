@@ -1,19 +1,18 @@
 {
 \def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
-\begin{tabular}{l*{3}{c}}
+\begin{tabular}{l*{3}{cc}}
 \hline\hline
-                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
-                    &\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\\
-                    &Mean/Std. Dev.&Mean/Std. Dev.&Mean/Std. Dev.\\
+                    &\multicolumn{1}{c}{Control}&\multicolumn{1}{c}{Treatment}&\multicolumn{1}{c}{Difference}\\
+                    &     mean/sd&     mean/sd&           p         \\
 \hline
-electricity         &     1181.33&     1086.75&            \\
-                    &    (454.31)&    (423.96)&            \\
-sqft                &     1633.05&     1657.55&            \\
-                    &    (682.90)&    (686.27)&            \\
-temp                &       79.89&       79.89&            \\
-                    &      (2.16)&      (1.97)&            \\
+electricity         &     1181.33&     1086.75&       0.001\sym{***}\\
+                    &      454.31&      423.96&                     \\
+sqft                &     1633.05&     1657.55&       0.572         \\
+                    &      682.90&      686.27&                     \\
+temp                &       79.89&       79.89&       0.987         \\
+                    &        2.16&        1.97&                     \\
 \hline
-Observations        &         501&         499&        1000\\
+Observations        &         501&         499&        1000         \\
 \hline\hline
 \end{tabular}
 }

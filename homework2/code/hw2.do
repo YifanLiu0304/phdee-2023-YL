@@ -35,11 +35,11 @@ import delimited "C:\Users\yliu3494\Dropbox (GaTech)\phdee-2023-YL\phdee-2023-YL
 		eststo nonretrofit: quietly estpost summarize electricity sqft temp if retrofit == 0
 		eststo retrofit: quietly estpost summarize electricity sqft temp if retrofit == 1
 		eststo diff: quietly estpost ttest electricity sqft temp, by(retrofit) unequal
-		esttab nonretrofit retrofit diff, cells("mean(pattern(1 1 0) fmt(3)) sd(pattern(1 1 0)) b(star pattern(0 0 1) fmt(3)) t(pattern(0 0 1) par fmt(3))") label
+		*esttab nonretrofit retrofit diff, cells("mean(pattern(1 1 0) fmt(3)) sd(pattern(1 1 0)) b(star pattern(0 0 1) fmt(3)) t(pattern(0 0 1) par fmt(3))") label
 	
 	* Generate the LaTeX table using esttab in this case
 	
-		esttab nonretrofit retrofit diff using stata_Q1.tex, tex cells(mean(fmt(2) label(Mean)) sd(fmt(2) par label(Std. Dev.))) replace label
+		esttab nonretrofit retrofit diff using stata_Q1.tex, tex cells("mean(pattern(1 1 0) fmt(2)) p(star pattern(0 0 1) fmt(3))" sd(pattern(1 1 0))) label nonumbers mtitles("Control" "Treatment" "Difference")
 	
 	
 ********************************************************************************

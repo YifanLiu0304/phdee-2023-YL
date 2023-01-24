@@ -1,0 +1,97 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=blue,
+    citecolor=black,
+}
+\usepackage{natbib}
+
+\usepackage{titlesec}
+  
+\title{ECON 7103 Homework 2}
+\author{Yifan Liu (yliu3494)}
+\date{Spring 2023}
+  
+\begin{document}
+  
+\maketitle
+
+
+
+
+\section{Python}
+The randomization of grouping worked. There is no significant difference in square feet of the home and the outdoor average temperature between the treatment and control groups.
+
+\begin{table}[hbt!]
+    \centering
+    \input{table_Q1.tex}
+    \caption{Sample mean, sample standard deviations, and p-values for the two-way t-test between treatment and control group means}
+    \label{tab:table_Q1}
+\end{table}
+
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[scale = 0.7]{hist_Q2.pdf}
+    \caption{Kernel density plot of the electricity use for treated group and control group}
+    \label{fig:hist_Q2}
+\end{figure}
+
+Figure 1 provides graphical evidence that the retrofits worked. The energy consumption distribution of the treatment group is on the slightly left side of the control group. In other words, receiving the energy-efficiency retrofit program makes households consume less electricity. 
+
+\hspace{1cm}
+
+Below Table 2 presents the coefficients of three OLS estimation techniques.
+
+\begin{table}[hbt!]
+    \centering
+    \input{table_Q3.tex}
+    \caption{Coefficients of three OLS estimation techniques}
+    \label{tab: table_Q3}
+\end{table}
+
+
+\section{Stata}
+
+Table 3 below displays each variable's sample, sample standard deviation, and p-values for the two-way t-test between treatment and control groups.
+
+\begin{table}[hbt!]
+    \centering
+    \input{stata_Q1.tex}
+    \caption{Sample mean, sample standard deviations, and p-values for the two-way t-test between treatment and control group means}
+    \label{tab:stata_Q1}
+\end{table}
+
+Figure 2 below is a two-way scatter plot with electricity consumption on the y-axis and square feet on the x-axis. We can have a general idea that the electricity consumption per household is positively related to the size of the home.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[scale = 0.7]{stata_Q2.pdf}
+    \caption{Two-way scatterplot of electricity consumption against square fee of the home}
+    \label{fig:stata_Q2}
+\end{figure}
+
+\hspace{1cm}
+
+Table 4 shows the regression result with heteroskedasticity-robust standard errors.
+
+\begin{table}[hbt!]
+    \centering
+    \input{stata_Q3.tex}
+    \caption{Regreesion results}
+    \label{tab:stata_Q3}
+\end{table}
+
+
+\end{document}

@@ -103,17 +103,17 @@ result1
 z, resid, rank, sigma = np.linalg.lstsq(X,Y)
 print(z)
 
-## b. OLS by simulated least squares?? 
+## b. OLS by simulated least squares?
+def func(b):
+    ones = np.ones(Y.shape[0])
+    x = np.matrix([ones,data['sqft'],data['retrofit'],data['temp']]).T
+    y = np.array(data['electricity'])
+    
+    return np.sum(np.square((y-x@b)))
+beta = minimize(func, (1,2,3,4))
+result2 = pd.Series(beta.x, index = ['const','sqft','retrofit','temp'])
+result2
 
-# Define the Model
-def f(X, b): return (X*b)
-# The objective function to minimize (least-squares regression)
-def obj(X, Y, b): return np.sum((Y - f(X, b))**2)
-
-# res.x contains your coefficients
-# res = minimize(obj(X, Y, bh1),x0=np.zeros(2))
-
-result2 = result1
 
 ## c. OLS using a canned routine
 # Using statsmodels
@@ -132,6 +132,6 @@ reg.columns = ['OLS by hand','OLS by simulated least squares','OLS using a canne
 ## Output to LaTeX folder
 os.chdir(outputpath) # Output directly to LaTeX folder
 
-table.to_latex('table_Q3.tex') 
+reg.to_latex('table_Q3.tex') 
 
 
