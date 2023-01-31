@@ -135,16 +135,38 @@ table.index = rownames
 table.columns = pd.MultiIndex.from_tuples(colnames)
 
 ## Output directly to LaTeX
+os.chdir(outputpath) # Output directly to LaTeX folder
 table.to_latex('table_e.tex')
 
 
 ### (f)
+# Plot average marginal effects with error bars -------------------------------------
+ame2 = np.array([ameb_sqft,ameb_temp])
+ameb2_lb = np.array([ameb_sqft_lb,ameb_temp_lb])
+ameb2_ub = np.array([ameb_sqft_ub,ameb_temp_ub])
+lowbar = np.array(ame2 - ameb2_lb)
+highbar = np.array(ameb2_ub - ame2)
+plt.errorbar(y = ame2, x = np.arange(2), yerr = [lowbar,highbar], fmt = 'o', capsize = 5)
+plt.ylabel('Average marginal effects estimate')
+plt.xticks(np.arange(2),['square fee of the home', 'outside temperature'])
+plt.xlim((-0.5,1.5)) # Scales the figure more nicely
+plt.axhline(linewidth=2, color='r')
+plt.savefig('bar_f.pdf',format='pdf')
+plt.show()
+
+
+
 # whis1 =  np.array([0,0.05,0.5,0.95,1])
-plt.boxplot(gammab_lsqft*df['electricity']/df['sqft'])
-plt.boxplot(gammab_ltemp*df['electricity']/df['temp'])
-sns.boxplot(
-    data=[gammab_lsqft*df['electricity']/df['sqft'], gammab_ltemp*df['electricity']/df['temp']],
-    palette=[sns.xkcd_rgb["pale red"], sns.xkcd_rgb["medium green"]],
-    showmeans=True,
-)
+# plt.boxplot(gammab_lsqft*df['electricity']/df['sqft'])
+# plt.xlabel('Average marginal effects of the square feet of the home')
+# plt.savefig('graph_f1.pdf',format='pdf') 
+# plt.boxplot(gammab_ltemp*df['electricity']/df['temp'])
+# plt.xlabel('Average marginal effects of outdoor temperature')
+# plt.savefig('graph_f2.pdf',format='pdf') 
+# sns.boxplot(
+    # data=[gammab_lsqft*df['electricity']/df['sqft'], gammab_ltemp*df['electricity']/df['temp']],
+    # palette=[sns.xkcd_rgb["pale red"], sns.xkcd_rgb["medium green"]],
+    # showmeans=True,
+# )
+# plt.savefig('graph_f3.pdf',format='pdf') 
 
