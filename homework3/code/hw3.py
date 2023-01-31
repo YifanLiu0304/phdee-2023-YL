@@ -74,6 +74,7 @@ for r in range(breps):
     olsb = sm.OLS(dfb['lnelectricity'],sm.add_constant(dfb.drop(['electricity','sqft','temp','lnelectricity'],axis = 1))).fit()
     ### Output the result
     olsbetablist[r,:] = olsb.params.to_numpy()
+    # ameb[r,:] = olsbetablist[r,:]*df['electricity']/df['temp']
 
 ########################### coefficient estimates
 deltab = sum(np.exp(olsbetablist[:,1]))/nobs
@@ -91,7 +92,7 @@ coef_lb = np.array([retrofit_lb,sqft_lb,temp_lb])
 coef_ub = np.array([retrofit_ub,sqft_ub,temp_ub])
 
 ############################# average marginal effects
-ameb_retrofit = sum(((deltab - 1)*df['electricity']) / (deltab**(df['retrofit'])))/nobs
+ameb_retrofit = sum(((deltab - 1)*df['electricity']) / (deltab**(df['retrofit'])))/nobs  # Here I should not use the average deltab, gammab_lsqft, and gammab_ltemp. Instead, it should be incorporated in the loop.
 ameb_sqft = sum(gammab_lsqft*df['electricity']/df['sqft'])/nobs
 ameb_temp = sum(gammab_ltemp*df['electricity']/df['temp'])/nobs
 ame = np.array([ameb_retrofit,ameb_sqft,ameb_temp])
@@ -127,7 +128,7 @@ ame = pd.concat([ame,ame_ci],axis = 1).stack()
 table = pd.concat([coefficients,ame],axis = 1)
 
 ## Add column and row labels.  Convert to dataframe (helps when you export it)
-rownames = pd.concat([pd.Series(['retrofit','sqft','temp']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for stdevs
+rownames = pd.concat([pd.Series(['retrofit (delta)','sqft (gamma1)','temp(gamma2)']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for stdevs
 colnames = [('Coefficient Estimates','(CI)'),('Average Marginal Effect Estimates','(CI)')] # three rows of column names
 
 table = pd.DataFrame(table)
