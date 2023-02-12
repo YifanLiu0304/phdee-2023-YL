@@ -22,6 +22,7 @@ import seaborn as sns
 import statsmodels.api as sm
 from scipy.optimize import minimize
 from scipy import stats
+#from statsmodels.stats.sandwich_covariance import CovarianceSwitcher
 
 # Set working directories and seed
 
@@ -92,13 +93,39 @@ df1['pre'] = (df1['month'] == 12).astype(int)
 df1['post'] = (df1['month'] == 13).astype(int)
 # Create the interaction term
 df1['treated:post'] = df1['treated'] * df1['post']
-ols1 = sm.OLS(df1['bycatch'],sm.add_constant(df1[['pre','treated','treated:post']])).fit()
-betaols = ols1.params.to_numpy() # save estimated parameters
+ols1 = sm.OLS(df1['bycatch'],sm.add_constant(df1[['pre','treated','treated:post']])).fit(cov_type='cluster', cov_kwds={'groups': df1['firm']})
+ols1.summary()
+betaols = np.round(ols1.params.to_numpy(),2) # save estimated parameters
+seols = ols1.bse.to_numpy() # save clustered standard errors
 params, = np.shape(betaols) # save number of estimated parameters
-nobs1 = int(ols1.nobs)
+nobs1 = np.round(int(ols1.nobs),0)
 result1 = ols1.params
 result1
 
+
+seols = pd.Series(np.round(seols,2)) 
+seols = '(' + seols.map(str) +  ')'
+## Get output in order
+order = [1,2,3,0]
+output1 = pd.DataFrame(np.column_stack([betaols,seols])).reindex(order)
+
+## Row and column names
+rownames = pd.concat([pd.Series(['Pre-period(lambda)','Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+colnames = ['Estimates (clustered standard errors)']
+# colnames = [('Estimates','(s.d.)')]
+
+## Append se, # Observations, row and column names
+output1 = pd.DataFrame(output1.stack().append(pd.Series(nobs1)))
+output1.index = rownames
+output1.columns = colnames
+
+## Output directly to LaTeX
+os.chdir(outputpath)
+output1.to_latex('Q3a.tex')
+
+
+
+'''
 # Bootstrap by hand and get confidence intervals -----------------------------
 ## Set values and initialize arrays to output to
 breps = 1000 # number of bootstrap replications
@@ -146,10 +173,66 @@ output1.columns = colnames
 ## Output directly to LaTeX
 os.chdir(outputpath)
 output1.to_latex('Q3a.tex')
+'''
 
 
 # Q3
-# (b)
+# (b) full monthly sample
+# Create a new variable to indicate the time period
+df['pre'] = (df['month'] < 13).astype(int)
+df['post'] = (df['month'] > 12).astype(int)
+# Create the interaction term
+df['treated:post'] = df['treated'] * df['post']
+ols2 = sm.OLS(df['bycatch'],sm.add_constant(df[['pre','treated','treated:post']])).fit(cov_type='cluster', cov_kwds={'groups': df['firm']})
+ols2.summary()
+ols2.bse
+
+betaols2 = np.round(ols2.params.to_numpy(),2) # save estimated parameters
+seols2 = ols2.bse.to_numpy() # save clustered standard errors
+params, = np.shape(betaols2) # save number of estimated parameters
+nobs2 = np.round(int(ols2.nobs),0)
+result2 = ols2.params
+result2
+
+seols2 = pd.Series(np.round(seols2,2)) 
+seols2 = '(' + seols2.map(str) +  ')'
+## Get output in order
+order = [1,2,3,0]
+output2 = pd.DataFrame(np.column_stack([betaols2,seols2])).reindex(order)
+
+## Append se, # Observations, row and column names
+output2 = pd.DataFrame(output2.stack().append(pd.Series(nobs2)))
+output2.index = rownames
+output2.columns = colnames
+
+## Output directly to LaTeX
+os.chdir(outputpath)
+output1.to_latex('Q3b.tex')
+
+
+# Q3
+# (c) add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
