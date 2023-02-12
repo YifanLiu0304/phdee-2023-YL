@@ -99,20 +99,18 @@ betaols = np.round(ols1.params.to_numpy(),2) # save estimated parameters
 seols = ols1.bse.to_numpy() # save clustered standard errors
 params, = np.shape(betaols) # save number of estimated parameters
 nobs1 = np.round(int(ols1.nobs),0)
-result1 = ols1.params
-result1
 
 
 seols = pd.Series(np.round(seols,2)) 
 seols = '(' + seols.map(str) +  ')'
 ## Get output in order
-order = [1,2,3,0]
+order = [2,3,0]
 output1 = pd.DataFrame(np.column_stack([betaols,seols])).reindex(order)
 
 ## Row and column names
-rownames = pd.concat([pd.Series(['Pre-period(lambda)','Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
 colnames = ['Estimates (clustered standard errors)']
-# colnames = [('Estimates','(s.d.)')]
+# colnames = ['Estimates','(s.d.)']
 
 ## Append se, # Observations, row and column names
 output1 = pd.DataFrame(output1.stack().append(pd.Series(nobs1)))
@@ -122,6 +120,8 @@ output1.columns = colnames
 ## Output directly to LaTeX
 os.chdir(outputpath)
 output1.to_latex('Q3a.tex')
+
+with open("Q3a_full.tex", "w") as f: f.write(ols1.summary().as_latex())
 
 
 
@@ -183,22 +183,29 @@ df['pre'] = (df['month'] < 13).astype(int)
 df['post'] = (df['month'] > 12).astype(int)
 # Create the interaction term
 df['treated:post'] = df['treated'] * df['post']
-ols2 = sm.OLS(df['bycatch'],sm.add_constant(df[['pre','treated','treated:post']])).fit(cov_type='cluster', cov_kwds={'groups': df['firm']})
+# create a set of indicator variables for the months
+month_dummies = pd.get_dummies(df['month'], prefix='month')
+df = pd.concat([df, month_dummies], axis=1)
+
+ols2 = sm.OLS(df['bycatch'],sm.add_constant(df.drop(['firm','month','bycatch','firmsize','shrimp','salmon','pre','post','month_13'],axis = 1))).fit(cov_type='cluster', cov_kwds={'groups': df['firm']})
+# make month 13 as the benchmark, also remove multilinearity
 ols2.summary()
-ols2.bse
+#ols2.bse
 
 betaols2 = np.round(ols2.params.to_numpy(),2) # save estimated parameters
 seols2 = ols2.bse.to_numpy() # save clustered standard errors
 params, = np.shape(betaols2) # save number of estimated parameters
 nobs2 = np.round(int(ols2.nobs),0)
-result2 = ols2.params
-result2
 
 seols2 = pd.Series(np.round(seols2,2)) 
 seols2 = '(' + seols2.map(str) +  ')'
 ## Get output in order
-order = [1,2,3,0]
+order = [1,2,0]
 output2 = pd.DataFrame(np.column_stack([betaols2,seols2])).reindex(order)
+
+## Row and column names
+rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+colnames = ['Estimates (clustered standard errors)']
 
 ## Append se, # Observations, row and column names
 output2 = pd.DataFrame(output2.stack().append(pd.Series(nobs2)))
@@ -208,23 +215,52 @@ output2.columns = colnames
 ## Output directly to LaTeX
 os.chdir(outputpath)
 output1.to_latex('Q3b.tex')
+with open("Q3b_full.tex", "w") as f: f.write(ols2.summary().as_latex())
+
 
 
 # Q3
-# (c) add
+# (c) add control variables
+ols3 = sm.OLS(df['bycatch'],sm.add_constant(df.drop(['firm','month','bycatch','pre','post','month_13'],axis = 1))).fit(cov_type='cluster', cov_kwds={'groups': df['firm']})
+# make month 13 as the benchmark, also remove multilinearity
+ols3.summary()
+#ols3.bse
+betaols3 = np.round(ols3.params.to_numpy(),2) # save estimated parameters
+seols3 = ols3.bse.to_numpy() # save clustered standard errors
+params, = np.shape(betaols3) # save number of estimated parameters
+nobs3 = np.round(int(ols3.nobs),0)
+
+seols3 = pd.Series(np.round(seols3,2)) 
+seols3 = '(' + seols3.map(str) +  ')'
+## Get output in order
+order = [2,5,0]
+output3 = pd.DataFrame(np.column_stack([betaols3,seols3])).reindex(order)
+
+## Row and column names
+rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+colnames = ['Estimates (clustered standard errors)']
+
+## Append se, # Observations, row and column names
+output3 = pd.DataFrame(output3.stack().append(pd.Series(nobs3)))
+output3.index = rownames
+output3.columns = colnames
+
+## Output directly to LaTeX
+os.chdir(outputpath)
+output1.to_latex('Q3c.tex')
+with open("Q3c_full.tex", "w") as f: f.write(ols3.summary().as_latex())
 
 
-
-
-
-
-
-
-
-
-
-
-
+# Q3
+# (d)
+output1
+output2
+output3
+output_all = pd.concat([output1, output2, output3], axis=1)
+colnames = [('Estimates','(clustered s.d.)','(a)'),('Estimates','(clustered s.d.)','(b)'),('Estimates','(clustered s.d.)','(c)')] # three rows of column names
+output_all.columns = pd.MultiIndex.from_tuples(colnames)
+os.chdir(outputpath)
+output_all.to_latex('Q3d.tex')
 
 
 

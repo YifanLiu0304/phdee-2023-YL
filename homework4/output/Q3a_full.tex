@@ -1,0 +1,35 @@
+\begin{center}
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}    &     bycatch      & \textbf{  R-squared:         } &     0.003   \\
+\textbf{Model:}            &       OLS        & \textbf{  Adj. R-squared:    } &    -0.028   \\
+\textbf{Method:}           &  Least Squares   & \textbf{  F-statistic:       } &     3.161   \\
+\textbf{Date:}             & Sun, 12 Feb 2023 & \textbf{  Prob (F-statistic):} &   0.0327    \\
+\textbf{Time:}             &     17:30:18     & \textbf{  Log-Likelihood:    } &   -1270.4   \\
+\textbf{No. Observations:} &         100      & \textbf{  AIC:               } &     2549.   \\
+\textbf{Df Residuals:}     &          96      & \textbf{  BIC:               } &     2559.   \\
+\textbf{Df Model:}         &           3      & \textbf{                     } &             \\
+\textbf{Covariance Type:}  &     cluster      & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lcccccc}
+                      & \textbf{coef} & \textbf{std err} & \textbf{z} & \textbf{P$> |$z$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{const}        &     1.38e+05  &     1.87e+04     &     7.396  &         0.000        &     1.01e+05    &     1.75e+05     \\
+\textbf{pre}          &    -773.2158  &      598.685     &    -1.292  &         0.197        &    -1946.617    &      400.186     \\
+\textbf{treated}      &     1.12e+04  &     2.35e+04     &     0.477  &         0.634        &    -3.49e+04    &     5.73e+04     \\
+\textbf{treated:post} &   -9591.3495  &     3231.787     &    -2.968  &         0.003        &    -1.59e+04    &    -3257.164     \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lclc}
+\textbf{Omnibus:}       & 11.020 & \textbf{  Durbin-Watson:     } &    2.387  \\
+\textbf{Prob(Omnibus):} &  0.004 & \textbf{  Jarque-Bera (JB):  } &   11.533  \\
+\textbf{Skew:}          &  0.697 & \textbf{  Prob(JB):          } &  0.00313  \\
+\textbf{Kurtosis:}      &  3.908 & \textbf{  Cond. No.          } &     6.89  \\
+\bottomrule
+\end{tabular}
+%\caption{OLS Regression Results}
+\end{center}
+
+Notes: \newline
+ [1] Standard Errors are robust to cluster correlation (cluster)
