@@ -49,7 +49,7 @@ grouped = grouped.mean().reset_index()
 plt.plot(grouped[grouped['treated'] == 1]['month'], grouped[grouped['treated'] == 1]['bycatch'], label='Treatment')
 plt.plot(grouped[grouped['treated'] == 0]['month'], grouped[grouped['treated'] == 0]['bycatch'], label='Control')
 # Add title and labels
-plt.title('Treatment and Control Trends of Bycatch Pounds by Month')
+# plt.title('Treatment and Control Trends of Bycatch Pounds by Month')
 plt.xlabel('Month')
 plt.ylabel('Pounds of Bycatch')
 # Specify the x-axis ticks
@@ -108,7 +108,7 @@ order = [2,3,0]
 output1 = pd.DataFrame(np.column_stack([betaols,seols])).reindex(order)
 
 ## Row and column names
-rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta)','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
 colnames = ['Estimates (clustered standard errors)']
 # colnames = ['Estimates','(s.d.)']
 
@@ -204,7 +204,7 @@ order = [1,2,0]
 output2 = pd.DataFrame(np.column_stack([betaols2,seols2])).reindex(order)
 
 ## Row and column names
-rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta)','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
 colnames = ['Estimates (clustered standard errors)']
 
 ## Append se, # Observations, row and column names
@@ -237,7 +237,7 @@ order = [2,5,0]
 output3 = pd.DataFrame(np.column_stack([betaols3,seols3])).reindex(order)
 
 ## Row and column names
-rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta))','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
+rownames = pd.concat([pd.Series(['Treatment group(gamma)','When a firm is treated (delta)','Constant','Observations']),pd.Series([' ',' ',' '])],axis = 1).stack() # Note this stacks an empty list to make room for standard errors
 colnames = ['Estimates (clustered standard errors)']
 
 ## Append se, # Observations, row and column names

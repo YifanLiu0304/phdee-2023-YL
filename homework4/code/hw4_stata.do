@@ -43,27 +43,35 @@ gen post = 0
 replace post = 1 if month > 12
 gen treat_post = treated * post
 
-regress bycatch treat_post firmsize shrimp salmon is_firm1-is_month12 is_month14-is_month24, cluster(firm)
+regress bycatch treat_post firmsize shrimp salmon is_firm2-is_month12 is_month14-is_month24, cluster(firm)
 estimates store m1
 esttab m1, label star(* 0.10 ** 0.05 *** 0.01)
-eststo: estout using Q1a_Stata.tex, replace label
+* eststo: estout using Q1a_Stata.tex, replace label
+outreg2 [m1] using 1a_Stata.tex, label 2aster tex(frag) dec(2) replace ctitle("Model (a)")
 
 * (b)
 * Store the group mean in a new variable
-egen mean_bycatch = mean(bycatch), by (month)
+egen mean_bycatch = mean(bycatch), by (firm)
 * Demean the dependent variable
-gen bycatch_demean = bycatch - mean_bycatch
+gen demean_bycatch = bycatch - mean_bycatch
 
 * Demean the independent variables
-foreach var in treat_post firmsize shrimp salmon {
-  egen mean_`var' = mean(`var'), by (month)
-  gen `var'_demean = `var' - mean_`var'
+foreach var of varlist treat_post shrimp salmon is_month1-is_month24 {
+  egen mean_`var' = mean(`var'), by (firm)
 }
 
-regress bycatch_demean treat_post_demean firmsize_demean shrimp_demean salmon_demean, cluster(firm)
+foreach var of varlist treat_post shrimp salmon is_month1-is_month24 {
+  gen demean_`var' = `var' - mean_`var'
+}
+
+
+
+* Factors that do not change over time are removed in the demean process
+regress demean_bycatch demean_treat_post demean_shrimp demean_salmon demean_is_month1-demean_is_month12 demean_is_month14-demean_is_month24, cluster(firm)
 estimates store m2
 esttab m2, label star(* 0.10 ** 0.05 *** 0.01)
-eststo: estout using Q1b_Stata.tex, replace label
+*eststo: estout using Q1b_Stata.tex, replace label
+outreg2 [m2] using 1b_Stata.tex, label 2aster tex(frag) dec(2) replace ctitle("Model (b)")
 
 * change the name of one of the regression coefficients
 * rename m2 _b[treat_post_demean] treat_post
@@ -74,8 +82,9 @@ eststo: estout using Q1b_Stata.tex, replace label
 * (c)
 esttab m1 m2, label star(* 0.10 ** 0.05 *** 0.01)
 * eresults m1, varnames(treat_post firmsize shrimp. salmon Constant)
+outreg2 [m1] using Q1c_Stata.tex, label 2aster tex(frag) dec(2) replace ctitle("Model (a)") keep(treat_post shrimp salmon)
 
-
+outreg2 [m2] using Q1c_Stata.tex, label 2aster tex(frag) dec(2) append ctitle("Model (b)") keep(demean_treat_post demean_shrimp demean_salmon)
 
 
 

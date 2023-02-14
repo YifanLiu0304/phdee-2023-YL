@@ -1,0 +1,62 @@
+		(1)
+VARIABLES	LABELS	Model (b)
+		
+demean_treat_post	demean_treat_post	-8,085.14**
+		(2,563.92)
+demean_shrimp	demean_shrimp	1.55**
+		(0.17)
+demean_salmon	demean_salmon	-0.68
+		(1.10)
+demean_is_month1	demean_is_month1	-954.54
+		(1,279.17)
+demean_is_month2	demean_is_month2	-766.79
+		(1,180.94)
+demean_is_month3	demean_is_month3	-768.87
+		(1,101.65)
+demean_is_month4	demean_is_month4	-518.26
+		(956.11)
+demean_is_month5	demean_is_month5	-238.15
+		(817.78)
+demean_is_month6	demean_is_month6	-147.46
+		(646.88)
+demean_is_month7	demean_is_month7	160.22
+		(619.64)
+demean_is_month8	demean_is_month8	359.10
+		(411.86)
+demean_is_month9	demean_is_month9	470.32
+		(375.93)
+demean_is_month10	demean_is_month10	0.18
+		(403.89)
+demean_is_month11	demean_is_month11	12.19
+		(277.52)
+demean_is_month12	demean_is_month12	-6.67
+		(299.14)
+demean_is_month14	demean_is_month14	-121.61
+		(304.14)
+demean_is_month15	demean_is_month15	-152.11
+		(304.77)
+demean_is_month16	demean_is_month16	-154.95
+		(432.27)
+demean_is_month17	demean_is_month17	-311.46
+		(335.52)
+demean_is_month18	demean_is_month18	225.19
+		(442.97)
+demean_is_month19	demean_is_month19	131.52
+		(488.68)
+demean_is_month20	demean_is_month20	164.29
+		(582.88)
+demean_is_month21	demean_is_month21	254.78
+		(668.95)
+demean_is_month22	demean_is_month22	120.91
+		(886.73)
+demean_is_month23	demean_is_month23	42.71
+		(905.28)
+demean_is_month24	demean_is_month24	-27.06
+		(796.00)
+Constant	Constant	-0.00
+		(0.00)
+		
+Observations		1,200
+R-squared		0.43
+Robust standard errors in parentheses		
+** p<0.01, * p<0.05		

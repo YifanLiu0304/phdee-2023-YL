@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{longtable}
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=blue,
+    citecolor=black,
+}
+\usepackage{natbib}
+
+\usepackage{titlesec}
+  
+\title{ECON 7103 Homework 4}
+\author{Yifan Liu (yliu3494)}
+\date{Spring 2023}
+  
+\begin{document}
+  
+\maketitle
+
+
+
+\noindent
+\section{Python}
+\noindent\rule{17cm}{0.4pt}
+1. Visualization of the parallel trends
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale = 0.7]{Q1.pdf}
+    \caption{Bycatch before and after treatment for treated and control groups in months of 2017 and 2018}
+    \label{fig:Q1}
+\end{figure}
+\\
+From Figure 1, we can tell that there are parallel trends before treatment (January 2018) between treatment and control groups. 
+\bigskip
+\\
+2. DID
+\bigskip
+\\
+$DID = \{E[Y_{igt}| g(i) = treat, t= Post] - E[Y_{igt}| g(i) = treat, t= Pre]\} - \{E[Y_{igt}| g(i) = control, t= Post] - E[Y_{igt}| g(i) = control, t= Pre]\}$
+\smallskip
+\\
+= (139612.51 - 148430.64) - (138001.81 - 137228.6)
+\smallskip
+\\
+= -9591.35
+\smallskip
+\\
+The DID estimator is defined as the difference in average monthly yields of bycatch in the treatment group before and after treatment minus the difference in average monthly yields of bycatch in the control group before and after treatment.
+\\
+The intuition of the estimator here is the effect of the program  on the monthly yields of bycatch. The program was implemented by an environmental nonprofit to reduce bycatch. 
+\bigskip
+\\
+3. 
+\bigskip
+\\
+(a)
+\smallskip
+\\
+Table 1 shows the two-period difference-in-differences estimator using the regression specification in the equation (3) and the observations in December 2017 and January 2018 only.
+\begin{table}[h]
+    \centering
+    \input{Q3a_full.tex}
+    \caption{Two-period difference-in-differences estimator using the regression specification in the equation (3)}
+    \label{tab:Q3_a}
+\end{table}
+\bigskip
+\\
+(b)
+\smallskip
+\\
+Table 2 shows the treatment estimator using the regression specification in the equation (4) and the full monthly sample.
+\\
+I deleted the month 13 to avoid multicollinearity. 
+\\
+Using the full monthly sample, the estimate of the treatment effects becomes smaller than the result with the observations in December 2017 and January 2018. 
+\begin{table}[h]
+    \centering
+    \input{Q3b_full.tex}
+    \caption{The treatment estimator using the regression specification in the equation (4)}
+    \label{tab:Q3_b}
+\end{table}
+\bigskip
+\\
+(c)
+\smallskip
+\\
+Table 3 shows the treatment estimator using the regression specification in the equation (5) with added controls and the full monthly sample.
+\\ The estimate of the treatment effects becomes a bit smaller after adding controls.
+\begin{table}[h]
+    \centering
+    \input{Q3c_full.tex}
+    \caption{The treatment estimator using the regression specification in the equation (5)}
+    \label{tab:Q3_c}
+\end{table}
+\bigskip
+\\
+(d)
+\smallskip
+\\
+Table 4 reports the results from the previous three questions (a) (b) (c) in a table with clustered standard errors at the firm level. Note that here we omit the estimates of the coefficients on the month and firm indicators in the table. 
+\smallskip
+\\
+The result in the model (a) is the same with my previous calculation in the question 2. The estimator is smaller in the model (b). This means the treatment effect of the program is smaller while using the full monthly sample. The estimator in the model (c) is a bit smaller than that in the model (b) due to the addition of control variables. The lack of these controls can make the treatment effect of the program biased upward. After controlling for firm size and other covariates that change over time, the estimator becomes slightly smaller.  
+\begin{table}[h]
+    \centering
+    \input{Q3d.tex}
+    \caption{The treatment estimators using the regression specification in the equation (3)(4)(5)}
+    \label{tab:Q3_d}
+\end{table}
+
+\noindent
+\section{Stata}
+\noindent\rule{17cm}{0.4pt}
+1. 
+\bigskip
+\\
+(a)
+\smallskip
+\\
+The long table shows the regression results using the equation (6) after generating indicator variables for each firm.
+\\
+PS: I failed to display Table 6 in multiple pages using "longtable" in a tidy way, but it worked somehow generating many repeated pages. 
+\\
+\begin{table}[h]
+    \small
+    \centering
+    \input{1a_Stata.tex}
+    \caption{The regression results using the equation (6)}
+    \label{tab:1a_Stata}
+\end{table}
+\\
+\bigskip
+(b)
+\smallskip
+\\
+Table 6 shows the regression results of within-transformation after demeaning each variable.
+\\
+\begin{table}[h]
+    \small
+    \centering
+    \input{1b_Stata.tex}
+    \caption{The regression results of within-transformation}
+    \label{tab:1b_Stata}
+\end{table}
+\\
+\bigskip
+(c)
+\smallskip
+\\
+Table 7 reports the estimates from (a) and (b) in the same table. 
+\smallskip
+\\
+Comparing (a) and (b), we find that the estimates of the coefficients are same in terms of the treatment effects of the program. The within-transformation reduces the clustered standard errors.
+\smallskip
+\\
+Comparing Table 4 and Table 7, we find that considering indicator variables for each firm makes the treatment effects smaller than the previous estimates. The interpretation of the estimates now becomes the treatment effects of the program while taking into account the heterogeneity of each firm.  
+\\
+\begin{table}[h]
+    \centering
+    \input{Q1c_Stata.tex}
+    \caption{Comparison of estimates from (a) and (b)}
+    \label{tab:1c_Stata}
+\end{table}
+
+\end{document}

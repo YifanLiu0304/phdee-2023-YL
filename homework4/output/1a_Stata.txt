@@ -1,0 +1,162 @@
+		(1)
+VARIABLES	LABELS	Model (a)
+		
+treat_post	treat_post	-8,085.14**
+		(2,619.21)
+firmsize	firmsize	13,324.03
+		(16,512.47)
+shrimp	shrimp	1.55**
+		(0.18)
+salmon	salmon	-0.68
+		(1.12)
+is_firm2	is_firm2	2,159.06
+		(1,158.41)
+is_firm3	is_firm3	-10,871.00
+		(12,019.17)
+is_firm4	is_firm4	649.41
+		(2,990.21)
+is_firm5	is_firm5	30,998.38**
+		(9,455.23)
+is_firm6	is_firm6	11,274.67
+		(6,691.67)
+is_firm7	is_firm7	1,985.19*
+		(786.74)
+is_firm8	is_firm8	13,233.66**
+		(4,089.06)
+is_firm9	is_firm9	10,042.46**
+		(2,692.08)
+is_firm10	is_firm10	17,142.73**
+		(4,628.40)
+is_firm11	is_firm11	3,801.00
+		(3,323.47)
+is_firm12	is_firm12	-5,175.76
+		(14,752.98)
+is_firm13	is_firm13	12,777.17*
+		(5,722.38)
+is_firm14	is_firm14	7,629.15**
+		(2,094.00)
+is_firm15	is_firm15	14,524.54**
+		(3,949.60)
+is_firm16	is_firm16	940.38
+		(9,461.48)
+is_firm17	is_firm17	9,311.01**
+		(2,848.01)
+is_firm18	is_firm18	141.97
+		(289.61)
+is_firm19	is_firm19	2,338.84
+		(2,841.33)
+is_firm20	is_firm20	-27,032.95
+		(25,724.48)
+is_firm21	is_firm21	2,319.24*
+		(1,109.61)
+is_firm22	is_firm22	5,756.95**
+		(1,687.67)
+is_firm23	is_firm23	-39.15
+		(5,739.60)
+is_firm24	is_firm24	23,080.47**
+		(7,343.87)
+is_firm25	is_firm25	31,120.47**
+		(9,043.49)
+is_firm26	is_firm26	3,819.14**
+		(1,257.15)
+is_firm27	is_firm27	-20,743.21**
+		(4,814.81)
+is_firm28	is_firm28	-4,861.41
+		(3,891.39)
+is_firm29	is_firm29	12,391.48**
+		(3,884.11)
+is_firm30	is_firm30	-8,256.04
+		(4,323.29)
+is_firm31	is_firm31	-2,689.49
+		(4,625.23)
+is_firm32	is_firm32	8,131.19**
+		(2,448.33)
+is_firm33	is_firm33	10,590.42
+		(5,954.81)
+is_firm34	is_firm34	8,073.81*
+		(3,515.60)
+is_firm35	is_firm35	118.68
+		(1,000.52)
+is_firm36	is_firm36	1,860.71
+		(1,412.02)
+is_firm37	is_firm37	-9,676.16**
+		(2,753.78)
+is_firm38	is_firm38	-7,123.30
+		(6,124.50)
+is_firm39	is_firm39	-1,423.29*
+		(561.58)
+is_firm40	is_firm40	27,791.95**
+		(8,016.06)
+is_firm41	is_firm41	3,480.91
+		(5,170.09)
+is_firm42	is_firm42	-2,480.36
+		(6,368.88)
+is_firm43	is_firm43	21,306.67**
+		(6,254.47)
+o.is_firm44	is_firm44 = o,	-
+		
+is_firm45	is_firm45	-14,729.54
+		(13,804.05)
+is_firm46	is_firm46	-1,430.01
+		(6,362.65)
+is_firm47	is_firm47	755.01*
+		(281.86)
+is_firm48	is_firm48	1,818.92
+		(2,158.36)
+is_firm49	is_firm49	4,424.25**
+		(1,381.93)
+is_firm50	is_firm50	3,164.71
+		(1,724.88)
+is_month1	is_month1	-954.54
+		(1,306.76)
+is_month2	is_month2	-766.79
+		(1,206.40)
+is_month3	is_month3	-768.87
+		(1,125.40)
+is_month4	is_month4	-518.26
+		(976.73)
+is_month5	is_month5	-238.15
+		(835.42)
+is_month6	is_month6	-147.46
+		(660.83)
+is_month7	is_month7	160.22
+		(633.00)
+is_month8	is_month8	359.10
+		(420.74)
+is_month9	is_month9	470.32
+		(384.04)
+is_month10	is_month10	0.18
+		(412.60)
+is_month11	is_month11	12.19
+		(283.50)
+is_month12	is_month12	-6.67
+		(305.59)
+is_month14	is_month14	-121.61
+		(310.70)
+is_month15	is_month15	-152.11
+		(311.34)
+is_month16	is_month16	-154.95
+		(441.59)
+is_month17	is_month17	-311.46
+		(342.76)
+is_month18	is_month18	225.19
+		(452.53)
+is_month19	is_month19	131.52
+		(499.22)
+is_month20	is_month20	164.29
+		(595.45)
+is_month21	is_month21	254.78
+		(683.37)
+is_month22	is_month22	120.91
+		(905.85)
+is_month23	is_month23	42.71
+		(924.80)
+is_month24	is_month24	-27.06
+		(813.17)
+Constant	Constant	709.11
+		(714.23)
+		
+Observations		1,200
+R-squared		1.00
+Robust standard errors in parentheses		
+** p<0.01, * p<0.05		
