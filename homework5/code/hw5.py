@@ -25,6 +25,7 @@ import seaborn as sns
 import statsmodels.api as sm
 from scipy.optimize import minimize
 from scipy import stats
+from linearmodels.iv import IVGMM
 
 # Set working directories and seed
 
@@ -109,6 +110,21 @@ beta.to_latex('3e.tex')
 
 
 # Q4: IVGMM
+# Define dependent, independent, and excluded variables
+exog = df[['one', 'car']]
+endog = df['mpg']
+z = df['weight']
+
+# Define IVGMM model
+model = IVGMM(dependent = y, endog = endog, exog = exog, instruments=z)
+
+# Fit the model
+results = model.fit()
+results
+os.chdir(outputpath) # Output directly to LaTeX folder
+beta.to_latex('Q4.tex')
+
+
 
 
 
