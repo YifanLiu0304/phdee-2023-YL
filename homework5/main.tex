@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=blue,
+    citecolor=black,
+}
+\usepackage{natbib}
+
+\usepackage{titlesec}
+  
+\title{ECON 7103 Homework 5}
+\author{Yifan Liu (yliu3494)}
+\date{Spring 2023}
+  
+\begin{document}
+  
+\maketitle
+
+
+
+\noindent
+\section{Python}
+\noindent\rule{17cm}{0.4pt}
+\smallskip
+\\
+1. OLS
+\smallskip
+\\Table 1 shows the ordinary-least-squares regression of $price$ on $mpg$, the $car$ indicator variable, and a constant. 
+\\ The coefficient on mpg is not statistically significant. If we have to interpret, -22.21 means that one unit in the increase of miles per gallon is expected to decrease the sales price of the vehicle by 22.21 units, holding all other variables constant.
+\begin{table}[H]
+    \centering
+    \input{Q1.tex}
+    \caption{OLS regression estimates}
+    \label{tab:Q1}
+\end{table}
+\bigskip
+\noindent
+2. Endogeneity
+\smallskip
+\\The endogeneity might result from simultaneity. While the fuel efficiency affects the price, the price also affects the fuel efficiency in miles per gallon. In other words, the fuel efficiency and the price are determined by each other. A change in error term causes the price to change, which causes the fuel efficiency to change. Therefore, the error term and the fuel efficiency are not independent.
+\bigskip
+\\
+3. IVs
+\smallskip
+\\(a)(b)(c) use $weight$, $weight^2$, and $height$ as the excluded instrument respectively. In other words, the different exclusion restrictions are: 
+\\ (a) the weight of the vehicle must explain some of the variation in fuel efficiency; and the weight of the vehicle must not be correlated with the error term in the regression of interest. 
+\\ (b) the square weight of the vehicle must explain some of the variation in fuel efficiency; and the square weight of the vehicle must not be correlated with the error term in the regression of interest. 
+\\ (c) the height of the vehicle must explain some of the variation in fuel efficiency; and the height of the vehicle must not be correlated with the error term in the regression of interest. 
+\\ I think the first two instruments are more reasonable since the weight of the vehicle seems to be highly related with the fuel efficiency, and thus affects the price. The heavier the vehicle is, the more energy it needs to get moving. Heavier vehicles have greater inertia and greater rolling resistance, which both contribute to increased fuel consumption. 
+\\ The height of the vehicle can be associated with the fuel efficiency since the higher vehicles are more likely to be larger. However, some sports cars that can be very low but use more fuels, are very expensive. It violates the monotonicity assumption. 
+\smallskip
+\\The two-stage-least-squares estimations by hand using different instrumental variables are shown in Table 2 as follows:
+\begin{table}[H]
+    \centering
+    \input{3e.tex}
+    \caption{Two-stage-least-squares estimations}
+    \label{tab:Q3}
+\end{table}
+\smallskip
+\noindent
+As Table 2 shows, the estimates in (a) and (b) are similar, but they have a huge discrepancy compared with the estimates in (c). The $mpg$ estimate in (b) is slightly larger than that in (a). The $height$ might not be a good instrument in this case as it can violate the monotonicity assumption.
+\bigskip
+\\
+4. IVGMM
+\smallskip
+\\ Table 3 reports the estimated second-stage coefficient and standard error for $mpg$. 
+\\ Compared with 2SLS, IVGMM relaxes the assumption of instrument exogeneity and accounts for potential correlation between the instrument and the error term. If the instruments are weak or endogenous, the 2SLS standard errors may be biased and the test statistics may be invalid. In IVGMM estimation, however, the standard errors are calculated using a more general method that accounts for both clustering/robustness and potential instrument correlation with the errors. The IVGMM method estimates the variance-covariance matrix of the model parameters by minimizing a moment condition-based distance function, which is robust to weak or endogenous instruments. This explain the differences in the standard errors between 2SLS and IVGMM.
+\begin{table}[H]
+    \centering
+    \input{Q4.tex}
+    \caption{IV estimates using GMM with $weight$ as the excluded instrument}
+    \label{tab:Q4}
+\end{table}
+\smallskip
+
+\section{Stata}
+\noindent\rule{17cm}{0.4pt}
+\smallskip
+\\
+1. LIML
+\begin{table}[H]
+    \centering
+    \input{Q1_Stata.tex}
+    \caption{Limited information maximum likelihood estimate using $weight$ as the excluded instrument}
+    \label{tab:Q1_Stata}
+\end{table}
+\bigskip
+\noindent
+2. Weak IV test
+\smallskip
+\\ The effective F statistics is 78.362 at 5\% confidence level. The 5\% critical value is 37.418. In other words, F statistics is larger than the critical value. The null hypothesis for weak instruments is rejected for the large value of the effective F. 
+\\ The result table of weakivtest can be found after running the attached do. file on Stata. 
+
+\end{document}
+

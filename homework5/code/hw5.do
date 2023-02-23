@@ -34,8 +34,6 @@ outreg2 [m1] using Q1_Stata.tex, label 2aster tex(frag) dec(2) replace ctitle("L
 ** Q2
 ivregress liml price car (mpg = weight), vce(robust)
 weakivtest
-estimates store test
-outreg2 [test] using Q2_Stata.tex, label 2aster tex(frag) dec(2) replace ctitle("Montile-Olea-Pfuleger test for weak IV")
 * The effective F statistics is 78.362 at 5% confidence level.
 * The 5% critical value is 37.418.
 * Since F statistics is larger than the critical value, we can reject the null hypothesis that the instrument is weak. In other words, we can safely use the instrument in this case.

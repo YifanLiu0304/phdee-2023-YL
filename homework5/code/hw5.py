@@ -26,6 +26,7 @@ import statsmodels.api as sm
 from scipy.optimize import minimize
 from scipy import stats
 from linearmodels.iv import IVGMM
+from tabulate import tabulate
 
 # Set working directories and seed
 
@@ -95,6 +96,9 @@ beta3 = np.linalg.inv(PWX3.T @ PWX3) @ PWX3.T @ y
 
 # (d)
 # (e)
+beta1 = beta1.map('{:.2f}'.format)
+beta2 = beta2.map('{:.2f}'.format)
+beta3 = beta3.map('{:.2f}'.format)
 beta = pd.concat([beta1, beta2, beta3], axis=1)
 # change the row names
 new_index = ['constant', 'mpg', 'car']
@@ -103,6 +107,7 @@ beta.index = new_index
 new_columns = ['weight as IV', 'weight2 as IV','height as IV']
 beta.columns = new_columns
 beta
+
 
 ## Output directly to LaTeX
 os.chdir(outputpath) # Output directly to LaTeX folder
@@ -119,10 +124,17 @@ z = df['weight']
 model = IVGMM(dependent = y, endog = endog, exog = exog, instruments=z)
 
 # Fit the model
-results = model.fit()
-results
+res = model.fit()
+res
+coef = res.params
+se = res.std_errors
+tval = res.tstats
+pval = res.pvalues
+
+# res = pd.DataFrame({'coef': coef, 'std err': se, 't': tval, 'P-value': pval})
 os.chdir(outputpath) # Output directly to LaTeX folder
-beta.to_latex('Q4.tex')
+res.summary.as_latex()
+with open("Q4.tex", "w") as f: f.write(res.summary.as_latex())
 
 
 
