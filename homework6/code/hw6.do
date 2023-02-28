@@ -23,10 +23,19 @@ import delimited "/Users/yifanliu/Documents/GitHub/phdee-2023-YL/homework6/data/
 * Q1 (a)
 generate cutoff = 225
 generate len_cut = length - cutoff
-rdrobust mpg length, c(225) p(2) bwselect(mserd) covs(car)
+* first stage
+// Estimate treatment effect using rdrobust
+rdrobust mpg length, c(225) bwselect(mserd) p(2) kernel(triangular) covs(car)
+estimates store m1
+outreg2 [m1] using Q1a.tex, label 2aster tex(frag) dec(2) replace ctitle(" ")
+// Store predicted values in a new variable
+display(tau_cl)
 
 
+* second stage
 
 
 
 * Q1 (b)
+rdplot mpg length, c(225) nbins(20 20) p(2) 
+* rdplot_hat_y
