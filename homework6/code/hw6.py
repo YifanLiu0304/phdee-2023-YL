@@ -41,10 +41,9 @@ df.columns
 
 
 # Q1: sharp or fuzzy RD
-# It should be a fuzzy RD.
-# The fuzzy RD appears when the threshold merely discontinuously increase the probability of treatment.
-# In this case, the vehicle equipped with the technology, which meet the length requirement (longer than 225 inches), are significantly less fuel-efficient (lower mpg).
-
+# It should be a sharp RD.
+# The sharp RD ensures that the running variable completely determines the treatment, while the fuzzy RD appears when the threshold merely discontinuously increase the probability of treatment.
+# In this case, the policy requires all vehicles longer than 225 inches must be equipped with the specific safety technology.
 
 # Q2: scatter plot
 # Define the value of the RD cutoff
@@ -58,12 +57,14 @@ plt.axvline(x=0, linestyle='--', color='red')
 # Add axis labels and a title
 plt.xlabel('Length - Cutoff')
 plt.ylabel('MPG')
+os.chdir(outputpath) # Output directly to LaTeX folder
+plt.savefig('Q2.pdf',format='pdf')
 # Show the plot
 plt.show()
 
 
 
-# Q3: 
+# Q3:
 # Create a binary treatment indicator for values of 'length' greater than or equal to the cutoff
 df['treatment'] = np.where(df['length'] >= cutoff, 1, 0)
 # Define the degree of the polynomial
@@ -107,73 +108,86 @@ plt.ylabel('MPG')
 plt.savefig('Q3.pdf',format='pdf')
 plt.show()
 
+y_right[0] - y_left[-1]
 
-
-# Q4: 
+# Q4: second-order polynomial
+plt.scatter(df['length-cutoff'], df['mpg'])
+# Add a vertical line at the cutoff
+plt.axvline(x=0, linestyle='--', color='red')
 # Fit a second-order polynomial to the data on either side of the cutoff
-x1 = df[df['length'] < cutoff]['length'] - cutoff
-y1 = df[df['length'] < cutoff]['mpg']
-p1 = np.polyfit(x1, y1, 2)
+x_left = df[df['length'] < cutoff]['length'] - cutoff
+y_left = df[df['length'] < cutoff]['mpg']
+model_left = sm.OLS(y_left, sm.add_constant(np.column_stack((x_left,x_left**2)))).fit()
 
-x2 = df[df['length'] >= cutoff]['length'] - cutoff
-y2 = df[df['length'] >= cutoff]['mpg']
-p2 = np.polyfit(x2, y2, 2)
+x_right = df[df['length'] >= cutoff]['length'] - cutoff
+y_right = df[df['length'] >= cutoff]['mpg']
+model_right = sm.OLS(y_right, sm.add_constant(np.column_stack((x_right,x_right**2)))).fit()
 
 # Generate a curve representing the estimated relationship between mpg and length - cutoff
-x = np.linspace(df['length'].min() - cutoff, df['length'].max() - cutoff, 100)
-y1_pred = np.polyval(p1, x)
-y2_pred = np.polyval(p2, x)
+x1 = np.linspace(df.query('`length` < @cutoff')['length-cutoff'].min(), 0, 100)
+y_left = model_left.predict(sm.add_constant(np.column_stack((x1, x1**2))))
+plt.plot(x1, y_left, color='blue', label='Left of cutoff')
+x2 = np.linspace(0, df.query('`length` >= @cutoff')['length-cutoff'].max(), 100)
+y_right = model_right.predict(sm.add_constant(np.column_stack((x2, x2**2))))
+plt.plot(x2, y_right, color='green', label='Right of cutoff')
 
-# Plot the curve over a scatterplot of the data
-fig, ax = plt.subplots()
-ax.scatter(df['length'] - cutoff, df['mpg'], alpha=0.5)
-ax.plot(x_left, y1_pred, 'blue', label='2nd-order polynomial (left)')
-ax.plot(x_right, y2_pred, 'green', label='2nd-order polynomial (right)')
-ax.axvline(0, color='red', linestyle='--')
-ax.legend()
-ax.set_xlabel('length - cutoff')
-ax.set_ylabel('mpg')
+plt.legend()
+plt.xlabel('Length - Cutoff')
+plt.ylabel('MPG')
 plt.savefig('Q4.pdf',format='pdf')
 plt.show()
 
+## Output directly to LaTeX
+os.chdir(outputpath) # Output directly to LaTeX folder
+with open("Q4L.tex", "w") as f: f.write(model_left.summary().as_latex())
+with open("Q4R.tex", "w") as f: f.write(model_right.summary().as_latex())
+
+
 # Estimate the impact of the policy on fuel efficiency around the cutoff
-treatment_effect = y2_pred[0] - y1_pred[-1]
+treatment_effect = y_right[0] - y_left[-1]
 print('Treatment effect estimate:', treatment_effect)
-# Treatment effect estimate: 2.91
+model_left.summary()
+model_right.summary()
+# Treatment effect estimate: -8.05
 
 
 
-# Q5:
-# Fit a fifth-order polynomial to the data on either side of the cutoff
-x1 = df[df['length'] < cutoff]['length'] - cutoff
-y1 = df[df['length'] < cutoff]['mpg']
-p1 = np.polyfit(x1, y1, 5)
+# Q5: fifth-order polynomial
+plt.scatter(df['length-cutoff'], df['mpg'])
+# Add a vertical line at the cutoff
+plt.axvline(x=0, linestyle='--', color='red')
+# Fit a second-order polynomial to the data on either side of the cutoff
+x_left = df[df['length'] < cutoff]['length'] - cutoff
+y_left = df[df['length'] < cutoff]['mpg']
+model_left = sm.OLS(y_left, sm.add_constant(np.column_stack((x_left,x_left**2,x_left**3,x_left**4,x_left**5)))).fit()
 
-x2 = df[df['length'] >= cutoff]['length'] - cutoff
-y2 = df[df['length'] >= cutoff]['mpg']
-p2 = np.polyfit(x2, y2, 5)
+x_right = df[df['length'] >= cutoff]['length'] - cutoff
+y_right = df[df['length'] >= cutoff]['mpg']
+model_right = sm.OLS(y_right, sm.add_constant(np.column_stack((x_right,x_right**2,x_right**3,x_right**4,x_right**5)))).fit()
 
 # Generate a curve representing the estimated relationship between mpg and length - cutoff
-x = np.linspace(df['length'].min() - cutoff, df['length'].max() - cutoff, 100)
-y1_pred = np.polyval(p1, x)
-y2_pred = np.polyval(p2, x)
+x1 = np.linspace(df.query('`length` < @cutoff')['length-cutoff'].min(), 0, 100)
+y_left = model_left.predict(sm.add_constant(np.column_stack((x1, x1**2,x1**3,x1**4,x1**5))))
+plt.plot(x1, y_left, color='blue', label='Left of cutoff')
+x2 = np.linspace(0, df.query('`length` >= @cutoff')['length-cutoff'].max(), 100)
+y_right = model_right.predict(sm.add_constant(np.column_stack((x2, x2**2,x2**3,x2**4,x2**5))))
+plt.plot(x2, y_right, color='green', label='Right of cutoff')
 
-# Plot the curve over a scatterplot of the data
-fig, ax = plt.subplots()
-ax.scatter(df['length'] - cutoff, df['mpg'], alpha=0.5)
-ax.plot(x_left, y1_pred, 'r', label='5th-order polynomial (left)')
-ax.plot(x_right, y2_pred, 'g', label='5th-order polynomial (right)')
-ax.axvline(0, color='k', linestyle='--')
-ax.legend()
-ax.set_xlabel('length - cutoff')
-ax.set_ylabel('mpg')
+plt.legend()
+plt.xlabel('Length - Cutoff')
+plt.ylabel('MPG')
 plt.savefig('Q5.pdf',format='pdf')
 plt.show()
 
+## Output directly to LaTeX
+os.chdir(outputpath) # Output directly to LaTeX folder
+with open("Q5L.tex", "w") as f: f.write(model_left.summary().as_latex())
+with open("Q5R.tex", "w") as f: f.write(model_right.summary().as_latex())
+
 # Estimate the impact of the policy on fuel efficiency around the cutoff
-treatment_effect = y2_pred[0] - y1_pred[-1]
+treatment_effect = y_right[0] - y_right[-1]
 print('Treatment effect estimate:', treatment_effect)
-# Treatment effect estimate: -5279.63
+# Treatment effect estimate: -4.17
 
 
 # Q6:
@@ -182,7 +196,7 @@ df = df.assign(one = pd.Series(1, index=df.index))
 # (a) "weight" as the excluded instrument
 # regress X on Z
 # PWX = Z*inv(Z'*Z)*Z'*X
-Z = df[['one','length-cutoff','car']]
+Z = df[['one','length-cutoff','car']] #set the discontinuity as a continuous variable
 X = df[['one','mpg','car']]
 PWX = np.matrix (Z @ np.linalg.inv(Z.T @ Z)) @ np.matrix(Z.T) @ X
 # regress y on the fitted value 
@@ -193,9 +207,18 @@ beta
 # The average treatment effect is 162.43.
 # In other words, one unit increase of mpg is expected to increase the vehicle sale price by 162.43 units, holding all other variables constant.
 
-
-
-
+df['policy'] = 0
+df['policy'][df['length']>225] = 1
+# regress X on Z
+# PWX = Z*inv(Z'*Z)*Z'*X
+Z = df[['one','policy','car']] #set the discontinuity as a continuous variable
+X = df[['one','mpg','car']]
+PWX = np.matrix (Z @ np.linalg.inv(Z.T @ Z)) @ np.matrix(Z.T) @ X
+# regress y on the fitted value 
+# beta_2sls = inv(PWX'*PWX)*PWX'*y
+y = df['price']
+beta = np.linalg.inv(PWX.T @ PWX) @ PWX.T @ y
+beta
 
 
 
