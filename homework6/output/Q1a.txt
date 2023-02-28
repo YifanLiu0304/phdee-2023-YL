@@ -1,0 +1,9 @@
+		(1)
+VARIABLES	LABELS	
+		
+RD_Estimate		-7.78**
+		(1.68)
+		
+Observations		1,000
+Standard errors in parentheses		
+** p<0.01, * p<0.05		

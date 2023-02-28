@@ -1,0 +1,183 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=blue,
+    citecolor=black,
+}
+\usepackage{natbib}
+
+\usepackage{titlesec}
+  
+\title{ECON 7103 Homework 6}
+\author{Yifan Liu (yliu3494)}
+\date{Spring 2023}
+  
+\begin{document}
+  
+\maketitle
+
+
+\noindent
+\section{Python}
+\noindent\rule{17cm}{0.4pt}
+\smallskip
+\\
+1. RD
+\smallskip
+\\ It should be a sharp RD.
+\\ The sharp RD ensures that the running variable completely determines the treatment, while the fuzzy RD appears when the threshold merely discontinuously increase the probability of treatment.
+\\ In this case, the policy requires all vehicles longer than 225 inches must be equipped with the specific safety technology.
+\bigskip
+
+\noindent
+2. Scatter plot
+\smallskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.7]{Q2.pdf}
+    \caption{Scatter plot of $mpg$ and $length - cutoff$ with a line at the RD cutoff}
+    \label{fig:Q2}
+\end{figure}
+\noindent
+\\ Figure 1 demonstrates a scatter plot with $mpg$ on the y-axis and $length-cutoff$ on the x-axis with a line at the RD cutoff.
+\\ As Figure 1 shows, there is visual evidence of bunching. There is also visual evidence of an discontinuity above and below the cutoff.
+\bigskip
+
+\noindent
+3. First-order polynomial
+\smallskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.7]{Q3.pdf}
+    \caption{First-order Polynomial}
+    \label{fig:Q3}
+\end{figure}
+\noindent
+\\ Figure 2 above shows the resulting first-order polynomial over a scatter plot. 
+\\ Table 1 and Table 2 below show the first-order polynomial regression results below and above the cutoff, respectively.
+\\ $effect = rightmodel.params[1] - leftmodel.params[1] = -0.0278 - (-0.0389) = 0.0111$
+\\ The first-stage treatment effect estimate is 0.0111. 
+\\ $yright[0] - yleft[-1]$
+\\ The difference at the cutoff is -8.42.
+\begin{table}[H]
+    \centering
+    \input{Q3L.tex}
+    \caption{First-order polynomial to the left side of the cutoff in a RDD}
+    \label{tab:Q3L}
+\end{table}
+\begin{table}[H]
+    \centering
+    \input{Q3R.tex}
+    \caption{First-order polynomial to the right side of the cutoff in a RD}
+    \label{tab:Q3R}
+\end{table}
+\bigskip
+
+\noindent
+4. Second-order polynomial
+\smallskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.7]{Q4.pdf}
+    \caption{Second-order Polynomial}
+    \label{fig:Q4}
+\end{figure}
+\noindent
+\\ Figure 3 shows the resulting second-order polynomial over a scatter plot. 
+\begin{table}[H]
+    \centering
+    \input{Q4L.tex}
+    \caption{Second-order polynomial to the left side of the cutoff in a RDD}
+    \label{tab:Q4L}
+\end{table}
+\begin{table}[H]
+    \centering
+    \input{Q4R.tex}
+    \caption{Second-order polynomial to the right side of the cutoff in a RDD}
+    \label{tab:Q4R}
+\end{table}
+\noindent
+\\ Table 3 and Table 4 show the second-order polynomial regression results below and above the cutoff, respectively.
+\\ $effect = yright[0] - yleft[-1]$
+\\ The difference at the cutoff (not sure if it is the treatment effect estimate) is -8.05.
+\bigskip
+
+\noindent
+5. Fifth-order polynomial
+\smallskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.7]{Q5.pdf}
+    \caption{Fifth-order Polynomial}
+    \label{fig:Q5}
+\end{figure}
+\noindent
+\\ Figure 4 shows the resulting fifth-order polynomial over a scatter plot. 
+\begin{table}[H]
+    \centering
+    \input{Q5L.tex}
+    \caption{Fifth-order polynomial to the left side of the cutoff in a RDD}
+    \label{tab:Q5L}
+\end{table}
+\begin{table}[H]
+    \centering
+    \input{Q5R.tex}
+    \caption{Fifth-order polynomial to the right side of the cutoff in a RDD}
+    \label{tab:Q5R}
+\end{table}
+\noindent
+\\ Table 5 and Table 6 show the fifth-order polynomial regression results below and above the cutoff, respectively.
+\\ $effect = yright[0] - yleft[-1]$
+\\ The difference at the cutoff (not sure if it is the treatment effect estimate) is -4.17.
+\bigskip
+
+\noindent
+6. 2SLS using the discontinuity as an instrument for $mpg$
+\\ I use the discontinuity as an instrument for $mpg$ in two ways: a continuous variable $length - cutoff$ and a binary variable $policy$ where 1 means the vehicle is longer than 225 and 0 for otherwise.
+\smallskip
+\\ Here are the results respectively (see the code for details): 
+\\ a continuous variable $length - cutoff$: the average treatment effect is 162.43; in other words, one unit increase in $mpg$ is expected to increase the vehicle's sale price by 162.43 units, holding all other variables constant.
+\\ a binary variable $policy$: the average treatment effect is 158.28; in other words, one unit increase in $mpg$ is expected to increase the vehicle's sale price by 158.28 units, holding all other variables constant.
+
+\section{Stata}
+\rule{17cm}{0.4pt}
+\smallskip
+\\ 1. (a)
+\begin{table}[H]
+    \centering
+    \input{Q1a.tex}
+    \caption{First-stage regression results using the discontinuity as the instrument}
+    \label{tab:Q1a}
+\end{table}
+\noindent
+\\ I had difficulty in obtaining the predicted value from rdrobust command in Stata. If we can get the predicted y, we can put it to the second-stage regression. 
+\bigskip
+\noindent
+\\ 1. (b)
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.7]{Q1b.pdf}
+    \caption{A plot of the results using rdplot}
+    \label{fig:Q1b}
+\end{figure}
+\bigskip
+\noindent
+\\ 2.
+\\ To the best of my current understanding, I believe it is a valid instrument to some degree. 1) It causes variation in the treatment variable. With the strange policy, every vehicle equipped with the technology is significantly less fuel-efficient. 2) However, it might have a direct effect on the outcome variable $price$ through other mechanisms than $mpg$. For example, a longer/bigger vehicle tend to be safer and prettier and cost more materials to produce. The vehicle is therefore more expensive.  
+
+
+\end{document}
+
