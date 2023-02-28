@@ -20,7 +20,7 @@
 import delimited "/Users/yifanliu/Documents/GitHub/phdee-2023-YL/homework6/data/instrumentalvehicles.csv"
 
 
-* Q1 (a)
+* Q1
 generate cutoff = 225
 generate len_cut = length - cutoff
 * first stage
@@ -28,14 +28,18 @@ generate len_cut = length - cutoff
 rdrobust mpg length, c(225) bwselect(mserd) p(2) kernel(triangular) covs(car)
 estimates store m1
 outreg2 [m1] using Q1a.tex, label 2aster tex(frag) dec(2) replace ctitle(" ")
-// Store predicted values in a new variable
 display(tau_cl)
 
-
+rdplot mpg length, nbins(20 20) c(225) p(2) genvars graph_options(title(Miles per gallon) xtitle("Length"))
+* store predicted values
+display(rdplot_mean_y)
+display(rdplot_hat_y)
 * second stage
+reg price rdplot_hat_y car
+estimates store m2
+outreg2 [m2] using Q1b.tex, label 2aster tex(frag) dec(2) replace ctitle(" ")
 
 
 
-* Q1 (b)
-rdplot mpg length, c(225) nbins(20 20) p(2) 
-* rdplot_hat_y
+
+

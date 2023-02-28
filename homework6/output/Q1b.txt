@@ -1,0 +1,14 @@
+		(1)
+VARIABLES	LABELS	
+		
+rdplot_hat_y	rdplot_hat_y	135.41**
+		(22.21)
+car	car	-3,693.27**
+		(222.36)
+Constant	Constant	17,622.91**
+		(711.27)
+		
+Observations		1,000
+R-squared		0.22
+Standard errors in parentheses		
+** p<0.01, * p<0.05		
