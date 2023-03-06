@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=blue,
+    citecolor=black,
+}
+\usepackage{natbib}
+
+\usepackage{titlesec}
+  
+\title{ECON 7103 Homework 7}
+\author{Yifan Liu (yliu3494)}
+\date{Spring 2023}
+  
+\begin{document}
+  
+\maketitle
+
+
+\noindent
+
+\section{Stata}
+\rule{17cm}{0.4pt}
+\smallskip
+\\ 1. (a)
+\\ The coefficient estimate of treatment is -.0654671 with a heteroskedasticity-robust standard error of .0013594.
+
+\noindent
+\\ 1. (b)
+\\ After matching, the coefficient estimate of treatment is -.0702609 with a heteroskedasticity-robust standard error of .0010031.
+
+\noindent
+\\ 1. (c)
+\\ In order to deal with possible selection bias in the quasi-experiment, (a) adds covariates that explain the initial difference regardless of the pandemic, while (b) employs matching to find similar control groups for the treatment observations. 
+\\ The issues with these approaches are that they did not control for history threat to internal validity. It might end up matching a pair of observations in different years. The variance in the outcome variable (electricity consumption) might come from variance in years instead of the pandemic. In other words, the true treatment effect can be obscured by events other than pandemic that happened during the period. 
+
+\noindent
+\\ 2. (a)
+\\ The coefficient estimate of treatment is .0250788  with a heteroskedasticity-robust standard error of .0027001.
+
+\noindent
+\\ 2. (b)
+This adds an indicator for year of sample, aiming to control for the variance in different years. This can help address the history threat to internal validity. In this way, the true treatment effect won't be obscured too much by events other than pandemic that happened during the period. 
+
+\noindent
+\\ 3. (a)
+The coefficient estimate of treatment is  -.0435903 with a heteroskedasticity-robust standard error of .001045.
+
+\noindent
+\\ 3. (b)
+The standard derivative-based standard-error estimators cannot be used by teffects nnmatch, because these matching estimators are not differentiable. 
+
+\end{document}
+
