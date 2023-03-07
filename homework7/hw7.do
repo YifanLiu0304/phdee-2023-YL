@@ -59,14 +59,21 @@ reg logmw i.zonen i.month i.dow i.hour i.year treatment temp pcp, vce(robust)
 * This adds an indicator for year of sample, aiming to control for the variance in different years. This can help address the history threat to internal validity. In this way, the true treatment effect won't be obscured too much by events other than pandemic that happened during the period. 
 
 ** Q3
+use electric_matching.dta, replace
+keep if (year == 2019) | (year==2020)
 gen year2020 = 0
 replace year2020 = 1 if year == 2020
-keep if year == 2020 | year ==2019
-teffects nnmatch (logmw temp pcp) (year2020), nneighbor(1) ematch(zonen dow hour month) gen(logmw_hat)  vce(robust) dmvariables
+gen logmw = log(mw)
+encode zone, generate(zonen)
+teffects nnmatch (logmw temp pcp) (year2020), atet nneighbor(1) ematch(zonen dow hour month) vce(robust) dmvariables generate(stub)
+predict logmwhat,po
+gen difflogmw = logmw - logmwhat
+drop if (year ==2019)
+gen treatment = 0
+replace treatment =1 if date >= 21975
 
-
-
-   
+reg difflogmw treatment, vce(robust)
+ * The coefficient estimate of treatment is .0019812  with a heteroskedasticity-robust standard error of  .0017456. 
 
 
 
