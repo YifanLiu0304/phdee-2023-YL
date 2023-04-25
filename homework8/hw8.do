@@ -20,7 +20,8 @@
 	set scheme plotplainblind, permanently
 	ssc install did_multiplegt, replace
 	ssc install sdid, replace
-	ssc  install reghdfe, replace
+	ssc install reghdfe, replace
+	ssc install synth, all
 	
 * Load the dataset
     use recycling_hw.dta, replace
@@ -34,7 +35,7 @@ twoway (line avg_recyclingrate year if nyc==1, sort) ///
        (line avg_recyclingrate year if ma==1, sort), ///
         xtitle("Year") ytitle("Recycling Rate") ///
         legend(label(1 "NYC") label(2 "NJ") label(3 "MA"))
-graph export "recycling_rate_plot.pdf", replace		
+graph export "Q1.pdf", replace		
 
 
 ** Q2: TWFE regression
@@ -79,11 +80,26 @@ graph export "Q4.pdf", replace
 
 
 ** Q5: synthetic control estimates 
+gen state = "nyc"
+replace state = "nj" if nj==1
+replace state = "ma" if ma==1
 
 
+* (a) The plot of raw outcomes for treated and control groups over time
+egen avg_recyclingrate2 = mean(recyclingrate), by(year nyc)
+twoway (line avg_recyclingrate2 year if nyc==1, sort) ///
+       (line avg_recyclingrate year if nyc==0, sort), ///
+        xtitle("Year") ytitle("Recycling Rate") ///
+        legend(label(1 "Treatment") label(2 "Control")) 
+* (b) The plot of raw outcomes for treated group and synthetic control group over time
+encode state, gen(nstate)
+tsset state year
+* net install synth_runner, from(https://raw.github.com/bquistorff/synth_runner/master/) replace
+synth_runner recyclingrate incomepercapita(1997(1)2001) nonwhite(1997(1)2001), trunit(3) trperiod(2002) gen_vars
 
+* (c) The plot of estimated synthetic control effects and placebo effects over time
 
-
+* (d) The plot of final synthetic control estimates over time
 
 
 
