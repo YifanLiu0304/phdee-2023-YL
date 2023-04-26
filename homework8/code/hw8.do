@@ -10,7 +10,7 @@
 * Set up your working directories
 
 	* local datapath = "C:\Users\dbrewer30\Dropbox\teaching\Courses\BrewerPhDEnv\Homeworks\phdee-2023-DB\sample_code\output" // Typically, where you keep the data and where you want the outputs to go will be different.  In this sample code, this is not the case so I don't specify a data path.
-	local outputpath = "/Users/yifanliu/Documents/GitHub/phdee-2023-YL/homework8" 
+	local outputpath = "/Users/yifanliu/Documents/GitHub/phdee-2023-YL/homework8/output" 
 	
 	cd "`outputpath'"
 	
@@ -92,11 +92,7 @@ twoway (line avg_recyclingrate2 year if nyc==1, sort) ///
         legend(label(1 "Treatment") label(2 "Control")) 
 graph export "Q5a.pdf", replace		
 
-graph twoway (line recyclingrate year if stateregionid != "NYC", lc(gray)) ///
-            (line recyclingrate year if stateregionid == "NYC", lc(black)), ///
-			xtitle("Year") ytitle("Recycling Rate") ///
-			xlabel(1997(2)2008) legend(label(1 "Controls") label(2 "NYC"))
-graph export "Q5aa.pdf", replace		
+		
 
 * (b) The plot of raw outcomes for treated group and synthetic control group over time
 * net install synth_runner, from(https://raw.github.com/bquistorff/synth_runner/master/) replace
@@ -111,6 +107,13 @@ egen stateregionid = concat(state region)
 replace stateregionid = "NYC" if stateregionid == "nycBrooklyn"
 encode stateregionid, gen(nstateregion)
 tab nstateregion
+
+graph twoway (line recyclingrate year if stateregionid != "NYC", lc(gray)) ///
+            (line recyclingrate year if stateregionid == "NYC", lc(black)), ///
+			xtitle("Year") ytitle("Recycling Rate") ///
+			xlabel(1997(2)2008) legend(label(1 "Controls") label(2 "NYC"))
+graph export "Q5aa.pdf", replace
+
 rename average_nyc outcomes
 
 tsset nstateregion year
@@ -126,7 +129,7 @@ single_treatment_graphs, trlinediff(-1) raw_gname(outcomes) effects_gname(effect
 graph twoway (line effect year if stateregionid != "NYC", lc(gray)) ///
             (line effect year if stateregionid == "NYC", lc(black)), ///
 			xtitle("Year") ytitle("Recycling Rate") ///
-			xlabel(1997(2)2008) legend(label(1 "Donors") label(2 "NYC")) ///
+			xlabel(1997(2)2008) legend(label(1 "Donors") label(2 "NYC"))
 graph export "Q5c.pdf", replace
 
 
@@ -135,7 +138,7 @@ graph export "Q5c.pdf", replace
 graph twoway (line outcomes_synth year if stateregionid != "NYC", lc(gray)) ///
             (line outcomes_synth year if stateregionid == "NYC", lc(black)), ///
 			xtitle("Year") ytitle("Recycling Rate") ///
-			xlabel(1997(2)2008) legend(label(1 "Donors") label(2 "NYC")) ///
+			xlabel(1997(2)2008) legend(label(1 "Donors") label(2 "NYC"))
 graph export "Q5d.pdf", replace
 
 
