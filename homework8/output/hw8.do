@@ -84,24 +84,59 @@ gen state = "nyc"
 replace state = "nj" if nj==1
 replace state = "ma" if ma==1
 
-
 * (a) The plot of raw outcomes for treated and control groups over time
 egen avg_recyclingrate2 = mean(recyclingrate), by(year nyc)
 twoway (line avg_recyclingrate2 year if nyc==1, sort) ///
-       (line avg_recyclingrate year if nyc==0, sort), ///
+       (line avg_recyclingrate2 year if nyc==0, sort), ///
         xtitle("Year") ytitle("Recycling Rate") ///
         legend(label(1 "Treatment") label(2 "Control")) 
-* (b) The plot of raw outcomes for treated group and synthetic control group over time
-encode state, gen(nstate)
-tsset state year
-* net install synth_runner, from(https://raw.github.com/bquistorff/synth_runner/master/) replace
-synth_runner recyclingrate incomepercapita(1997(1)2001) nonwhite(1997(1)2001), trunit(3) trperiod(2002) gen_vars
+graph export "Q5a.pdf", replace		
 
+graph twoway (line recyclingrate year if stateregionid != "NYC", lc(gray)) ///
+            (line recyclingrate year if stateregionid == "NYC", lc(black)), ///
+			xtitle("Year") ytitle("Recycling Rate") ///
+			xlabel(1997(2)2008) legend(label(1 "Controls") label(2 "NYC"))
+graph export "Q5aa.pdf", replace		
+
+* (b) The plot of raw outcomes for treated group and synthetic control group over time
+* net install synth_runner, from(https://raw.github.com/bquistorff/synth_runner/master/) replace
+encode state, gen(nstate)
+encode region, gen(nregion)
+egen average_nyc = mean(recyclingrate) if nyc ==1, by(year nyc)
+* make average_nyc represent the outcome variable, also for MA and NJ
+replace average_nyc = recyclingrate if average_nyc ==. 
+drop if region == "Bronx" |region == "Queens"
+sort state region year
+egen stateregionid = concat(state region)
+replace stateregionid = "NYC" if stateregionid == "nycBrooklyn"
+encode stateregionid, gen(nstateregion)
+tab nstateregion
+rename average_nyc outcomes
+
+tsset nstateregion year
+synth outcomes incomepercapita(1997(1)2001) nonwhite(1997(1)2001) munipop2000 collegedegree2000 democratvoteshare2000, trunit(1) trperiod(2002) fig
+graph export "Q5b.pdf", replace
+
+synth_runner outcomes incomepercapita(1997(1)2001) nonwhite(1997(1)2001) munipop2000 collegedegree2000 democratvoteshare2000, trunit(1) trperiod(2002) gen_vars
+
+effect_graphs , trlinediff(-1) effect_gname(effect) tc_gname(outcomes_synth)
+single_treatment_graphs, trlinediff(-1) raw_gname(outcomes) effects_gname(effects) 
 * (c) The plot of estimated synthetic control effects and placebo effects over time
+* effect: a variable that contains the difference between the unit's outcome and its synthetic control for that time period.
+graph twoway (line effect year if stateregionid != "NYC", lc(gray)) ///
+            (line effect year if stateregionid == "NYC", lc(black)), ///
+			xtitle("Year") ytitle("Recycling Rate") ///
+			xlabel(1997(2)2008) legend(label(1 "Donors") label(2 "NYC")) ///
+graph export "Q5c.pdf", replace
+
 
 * (d) The plot of final synthetic control estimates over time
-
-
+* depvar_synth: a variable that contains the unit's synthetic control outcome for that time period.
+graph twoway (line outcomes_synth year if stateregionid != "NYC", lc(gray)) ///
+            (line outcomes_synth year if stateregionid == "NYC", lc(black)), ///
+			xtitle("Year") ytitle("Recycling Rate") ///
+			xlabel(1997(2)2008) legend(label(1 "Donors") label(2 "NYC")) ///
+graph export "Q5d.pdf", replace
 
 
 
